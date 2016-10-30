@@ -1,0 +1,65 @@
+[backup]
+; Path output
+save_dir = ./backup/
+save_tpl = {pref}-{mysql_base}.{ext}
+save_pref = %Y%m%d
+save_gzip = True
+
+; How to store
+max_copies_count=5
+
+; Encryption
+;encrypt_pass = 123456
+compress_level = 6
+
+[mysql=ideapush]
+; DSN
+;mysql_host = localhost
+;mysql_user = test
+;mysql_pass = password
+mysql_base = test
+
+; Options:
+mysql_options = --login-path=localhost -Q -e --no-autocommit --opt
+
+[webdav=user@yandex]
+webdav_host = yandex.ru
+webdav_user = user@yandex.ru
+webdav_pass = password
+max_copies_count=1
+
+[webdav=user@gmail]
+webdav_host = gmail.com
+webdav_user = user@gmail.com
+webdav_pass = password
+max_copies_count=1
+
+[sendmail]
+; API
+api_domen = localhost
+api_token = key-token
+
+; SMTP
+smtp_host = localhost
+
+; Settings
+limit_size_source = 50M
+chunk_max_size = 5M
+
+[sendmail=basename]
+; SMTP or API
+transport = api
+; header
+send_subject = Backup: {filename}
+send_from = Backup <backup@localhost>
+send_to = user@host
+send_cc = user2@host
+send_bcc = user3@host
+
+[sendmail=basename2]
+; SMTP or API
+transport = smtp
+; header
+send_subject = Backup: {filename}
+send_from = Backup <backup@localhost>
+send_to = user@host
