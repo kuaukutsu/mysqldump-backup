@@ -1,0 +1,7 @@
+/.idea/**
+# Configuration
+mysqldump.cfg
+# backup
+/backup/
+# vendor
+/vendor/
