@@ -1,6 +1,6 @@
 import os
 import config as cfg
-from utils import compress, program_popen
+from utils import encrypt, program_popen
 from fnmatch import fnmatch
 
 
@@ -16,10 +16,10 @@ class Mysqldump(object):
 
         # encryption
         if self.__use_encrypt():
-            compress(self.__filepath(),
-                     self.__filepath_encrypt(),
-                     self._config.encrypt_pass,
-                     self._config.compress_level)
+            encrypt(self.__filepath(),
+                    self.__filepath_encrypt(),
+                    self._config.encrypt_pass,
+                    self._config.compress_level)
 
         return self.__filepath_encrypt() if self.__use_encrypt() else self.__filepath()
 

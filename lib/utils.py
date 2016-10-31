@@ -28,12 +28,12 @@ def program_popen(command):
     return proc.wait()
 
 
-def compress(filesrc, filedest, passwd, compress_level=6):
-    if os.path.exists(filedest):
-        os.remove(filedest)
+def encrypt(src, dst, passwd, compress_level=6):
+    if os.path.exists(dst):
+        os.remove(dst)
 
     # cryption
-    pyminizip.compress(filesrc, filedest, passwd, compress_level)
+    pyminizip.compress(src, dst, str(passwd), int(compress_level))
 
     # remove src
-    os.remove(filesrc)
+    os.remove(src)

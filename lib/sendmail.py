@@ -1,17 +1,17 @@
 import os
 import smtplib
+import requests
+import config as cfg
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import requests
-import config as cfg
 
 
 class Sendmail(object):
     """
-    https://docs.python.org/2/library/email-examples.html
-    https://documentation.mailgun.com/user_manual.html#sending-via-api
-    https://documentation.mailgun.com/user_manual.html#sending-via-smtp
+        https://docs.python.org/2/library/email-examples.html
+        https://documentation.mailgun.com/user_manual.html#sending-via-api
+        https://documentation.mailgun.com/user_manual.html#sending-via-smtp
     """
     def __init__(self, config, filepath):
         if not isinstance(config, cfg.Config):

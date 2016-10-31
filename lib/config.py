@@ -172,6 +172,11 @@ class Config(object):
             return self._config.get('webdav=' + self._args.webdav, 'webdav_pass', fallback='')
 
     @property
+    def webdav_dir(self):
+        if self.use_webdav:
+            return self._config.get('webdav=' + self._args.webdav, 'webdav_dir', fallback='/')
+
+    @property
     def webdav_max_copies_count(self):
         if self.use_webdav:
             return int(self._config.get('webdav=' + self._args.webdav, 'max_copies_count', fallback=1))

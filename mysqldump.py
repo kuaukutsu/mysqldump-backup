@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 import os
 import time
-from lib import config, mysql, webdav, sendmail
+from lib import config, mysql, storage, sendmail
 
 CONFIG_FILE = os.path.abspath(os.path.dirname(__file__)) + '/mysqldump.cfg'
 
@@ -19,17 +19,15 @@ def main():
         cfg = config.Config(CONFIG_FILE)
 
         # exec mysqldump
-        mysqldump = mysql.Mysqldump(cfg)
-        filepath = mysqldump.run()
+        filepath = mysql.Mysqldump(cfg).run()
 
         # exec webdav (parallel)
         if cfg.use_webdav:
-            webdav.WebDAV(cfg).run()
+            storage.Storage(cfg, filepath).run()
 
         # exec sendmail (parallel)
         if cfg.use_sendmail:
-            send = sendmail.Sendmail(cfg, filepath).run()
-            print send
+            sendmail.Sendmail(cfg, filepath).run()
 
     except SystemExit:
         print_log('error found, process terminated')
