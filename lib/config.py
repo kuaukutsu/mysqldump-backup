@@ -237,8 +237,31 @@ class Config(object):
         if self.use_sendmail:
             return int(self._config.get('sendmail', 'smtp_port', fallback=0))
 
+    # sendmail setting
+    @property
+    def email_limit_size_attach(self):
+        if self.use_sendmail:
+            return self.__format_text_size(self._config.get('sendmail', 'limit_size_source', fallback=0))
+
+    @property
+    def email_chunk_max_size(self):
+        if self.use_sendmail:
+            return self.__format_text_size(self._config.get('sendmail', 'chunk_max_size', fallback=0))
+
     def __pref_format(self):
         pref = self._config.get('backup', 'save_pref', fallback='%Y%m%d')
         if '%' in pref:
             pref = time.strftime(pref)
         return pref
+
+    @staticmethod
+    def __format_text_size(str_size):
+        if isinstance(str_size, int):
+            return str_size
+
+        symbols = {'K': 2**10, 'M': 2**20}
+        letter = str_size[-1].strip().upper()
+        if letter in symbols:
+            str_size = int(str_size[:-1]) * int(symbols[letter])
+
+        return str_size

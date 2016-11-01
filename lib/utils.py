@@ -32,8 +32,12 @@ def encrypt(src, dst, passwd, compress_level=6):
     if os.path.exists(dst):
         os.remove(dst)
 
-    # cryption
+    # cryption OR use shell p7zip with option -p
     pyminizip.compress(src, dst, str(passwd), int(compress_level))
 
     # remove src
     os.remove(src)
+
+
+def split(src, dst, chunk_size):
+    program_popen('7z a -v{chunk_size} {dst} {src}'.format(src=src, dst=dst, chunk_size=chunk_size))
