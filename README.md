@@ -29,7 +29,7 @@ mysql_config_editor set --login-path=local --host=localhost --user=username --pa
 
 Edit ./mysqldump.cfg
 ```bash
-mv ./mysqldump.cfg.example ./mysqldump.cfg
+cp ./mysqldump.cfg.example ./mysqldump.cfg
 ```
 
 ## Run
