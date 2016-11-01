@@ -40,4 +40,4 @@ def encrypt(src, dst, passwd, compress_level=6):
 
 
 def split(src, dst, chunk_size):
-    program_popen('7z a -v{chunk_size} {dst} {src}'.format(src=src, dst=dst, chunk_size=chunk_size))
+    program_popen('7z a {dst} -mx0 -v{chunk_size} {src}'.format(src=src, dst=dst, chunk_size=chunk_size))
