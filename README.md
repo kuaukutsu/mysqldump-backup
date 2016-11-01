@@ -9,11 +9,6 @@ Install from requirements.txt
 pip install -r requirements.txt
 ```
 
-Install python-devel (for **pycrypto**)
-```
-easy_install pycrypto
-```
-
 Install 7zip (for add files to archive before attach to mail)
 ```
 . install p7zip p7zip-plugins
