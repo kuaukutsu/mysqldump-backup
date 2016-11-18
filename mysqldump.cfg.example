@@ -35,6 +35,11 @@ api_token = key-token
 
 ; SMTP
 smtp_host = localhost
+smtp_port = 465
+smtp_ssl  = False
+smtp_tls  = True
+smtp_user = user
+smtp_pass = password
 
 ; Settings
 limit_size_source = 50M

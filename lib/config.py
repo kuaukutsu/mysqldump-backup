@@ -237,6 +237,26 @@ class Config(object):
         if self.use_sendmail:
             return int(self._config.get('sendmail', 'smtp_port', fallback=0))
 
+    @property
+    def smtp_ssl(self):
+        if self.use_sendmail:
+            return bool(self._config.get('sendmail', 'smtp_ssl', fallback='False') == 'True')
+
+    @property
+    def smtp_tls(self):
+        if self.use_sendmail:
+            return bool(self._config.get('sendmail', 'smtp_tls', fallback='False') == 'True')
+
+    @property
+    def smtp_user(self):
+        if self.use_sendmail:
+            return self._config.get('sendmail', 'smtp_user', fallback='')
+
+    @property
+    def smtp_pass(self):
+        if self.use_sendmail:
+            return self._config.get('sendmail', 'smtp_pass', fallback='')
+
     # sendmail setting
     @property
     def email_limit_size_attach(self):

@@ -1,5 +1,4 @@
 import os
-import smtplib
 import requests
 import shutil
 import config as cfg
@@ -58,7 +57,7 @@ class Sendmail(object):
         msg = MIMEMultipart()
         msg['From'] = self._config.email_from
         msg['To'] = self._config.email_from
-        msg['Subject'] = self._config.email_subject
+        msg['Subject'] = self._config.email_subject.format(filename=os.path.basename(filepath))
         msg.attach(MIMEText("mysqldump backup"))
 
         # attach
@@ -67,9 +66,27 @@ class Sendmail(object):
             part['Content-Disposition'] = 'attachment; filename="%s"' % fil.name
             msg.attach(part)
 
-        smtp = smtplib.SMTP(self._config.smtp_host, self._config.smtp_port)
-        smtp.sendmail(self._config.email_from, self._config.email_to, msg.as_string())
-        smtp.close()
+        if self._config.smtp_ssl:
+            from smtplib import SMTP_SSL
+            smtp = SMTP_SSL(self._config.smtp_host, self._config.smtp_port)
+        else:
+            from smtplib import SMTP
+            smtp = SMTP(self._config.smtp_host, self._config.smtp_port)
+
+        smtp.set_debuglevel(False)
+        if self._config.smtp_tls:
+            # identify ourselves to smtp gmail client
+            smtp.ehlo()
+            # secure our email with tls encryption
+            smtp.starttls()
+            # re-identify ourselves as an encrypted connection
+            smtp.ehlo()
+
+        try:
+            smtp.login(self._config.smtp_user, self._config.smtp_pass)
+            smtp.sendmail(self._config.email_from, self._config.email_to, msg.as_string())
+        finally:
+            smtp.quit()
 
     def transport_api(self, filepath):
         data = {"from": self._config.email_from,
