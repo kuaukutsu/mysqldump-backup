@@ -24,7 +24,10 @@ class Sendmail(object):
         self._filepath = os.path.abspath(filepath)
 
     def run(self):
+        self._config.logger.info('sendmail run')
+
         filesize = os.path.getsize(self._filepath)
+        self._config.logger.info('backup size {0}'.format(filesize))
 
         # limit size
         if 0 < self._config.email_limit_size_attach < filesize:
@@ -54,6 +57,8 @@ class Sendmail(object):
             getattr(self, 'transport_{}'.format(self._config.email_transport))(self._filepath)
 
     def transport_smtp(self, filepath):
+        self._config.logger.info('use transport smtp')
+
         msg = MIMEMultipart()
         msg['From'] = self._config.email_from
         msg['To'] = self._config.email_from
@@ -89,6 +94,8 @@ class Sendmail(object):
             smtp.quit()
 
     def transport_api(self, filepath):
+        self._config.logger.info('use transport api')
+
         data = {"from": self._config.email_from,
                 "to": self._config.email_to,
                 "subject": self._config.email_subject.format(filename=os.path.basename(filepath)),

@@ -11,11 +11,14 @@ class Mysqldump(object):
         self._config = config
 
     def run(self):
+        self._config.logger.info('mysqldump run')
+
         self.watch()
         self.dump()
 
         # encryption
         if self.__use_encrypt():
+            self._config.logger.info('use encrypt')
             encrypt(self.__filepath(),
                     self.__filepath_encrypt(),
                     self._config.encrypt_pass,
@@ -26,6 +29,8 @@ class Mysqldump(object):
     def dump(self):
         # build command
         cmd = self.__create_cmd()
+        self._config.logger.debug('{0}'.format(cmd))
+
         # clean
         filepath = self.__filepath()
         if os.path.exists(filepath):
@@ -46,6 +51,7 @@ class Mysqldump(object):
         # remove old copies
         if 0 < max_copies_count <= len(files):
             for f in files[0:(len(files) - max_copies_count)]:
+                self._config.logger.debug('remove old copies {0}'.format(f))
                 os.remove(os.path.join(work_dir, f))
 
     def __create_cmd(self):
