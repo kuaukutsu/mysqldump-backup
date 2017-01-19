@@ -108,8 +108,12 @@ class Sendmail(object):
         if self._config.email_bcc:
             data['bcc'] = self._config.email_bcc
 
-        return requests.post(
+        response = requests.post(
             "https://api.mailgun.net/v3/{domain_name}/messages".format(domain_name=self._config.smtp_api_domain),
             auth=("api", self._config.smtp_api_token),
             files={"attachment": open(filepath)},
             data=data)
+
+        self._config.logger.debug('mailgun response: {0}'.format(response))
+
+        return response
