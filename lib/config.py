@@ -86,12 +86,13 @@ class Config(object):
 
             # level
             handler = logging.FileHandler(args.logfile)
-            if 'info' in args.loglevel.lower():
-                self._logger.setLevel(logging.INFO)
-                handler.setLevel(logging.INFO)
-            if 'debug' in args.loglevel.lower():
-                self._logger.setLevel(logging.DEBUG)
-                handler.setLevel(logging.DEBUG)
+            if args.loglevel:
+                if 'info' in args.loglevel.lower():
+                    self._logger.setLevel(logging.INFO)
+                    handler.setLevel(logging.INFO)
+                if 'debug' in args.loglevel.lower():
+                    self._logger.setLevel(logging.DEBUG)
+                    handler.setLevel(logging.DEBUG)
 
             # format
             formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s', '%Y/%m/%d %H:%M:%S')
