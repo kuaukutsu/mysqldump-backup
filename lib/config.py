@@ -60,10 +60,10 @@ class Config(object):
                             type=int,
                             default=6,
                             help="use with --encrypt")
-        parser.add_argument("--webdav",
-                            dest="webdav",
+        parser.add_argument("--storage",
+                            dest="storage",
                             type=str,
-                            help="copy mysqldump to Nameserver (WebDAV)")
+                            help="copy mysqldump to Nameserver")
         parser.add_argument("--sendmail",
                             dest="sendmail",
                             type=str,
@@ -130,37 +130,37 @@ class Config(object):
 
     @property
     def db_host(self):
-        return self._config.get('mysql=' + self._args.database, 'mysql_host', fallback='')
+        return self._config.get('mysql=' + self._args.database, 'host', fallback='')
 
     @property
     def db_port(self):
-        return self._config.get('mysql=' + self._args.database, 'mysql_port', fallback=None)
+        return self._config.get('mysql=' + self._args.database, 'port', fallback=None)
 
     @property
     def database(self):
-        return self._config.get('mysql=' + self._args.database, 'mysql_base', fallback=self._args.database)
+        return self._config.get('mysql=' + self._args.database, 'base', fallback=self._args.database)
 
     @property
     def db_user(self):
-        return self._config.get('mysql=' + self._args.database, 'mysql_user', fallback=self._args.username)
+        return self._config.get('mysql=' + self._args.database, 'user', fallback=self._args.username)
 
     @property
     def db_pass(self):
-        return self._config.get('mysql=' + self._args.database, 'mysql_pass', fallback=self._args.password)
+        return self._config.get('mysql=' + self._args.database, 'pass', fallback=self._args.password)
 
     @property
     def db_options(self):
-        return self._config.get('mysql=' + self._args.database, 'mysql_options', fallback='')
+        return self._config.get('mysql=' + self._args.database, 'options', fallback='')
 
     @property
     def save_filename(self):
-        filename = self._config.get('backup', 'save_tpl', fallback='{mysql_base}.{ext}')
-        return filename.format(pref=self.__pref_format(), mysql_base=self.database, ext='{ext}')
+        filename = self._config.get('backup', 'save_tpl', fallback='{base}.{ext}')
+        return filename.format(pref=self.__pref_format(), base=self.database, ext='{ext}')
 
     @property
     def save_filename_mask(self):
-        filename = self._config.get('backup', 'save_tpl', fallback='{mysql_base}.{ext}')
-        return filename.format(pref='*', mysql_base=self.database, ext='*')
+        filename = self._config.get('backup', 'save_tpl', fallback='{base}.{ext}')
+        return filename.format(pref='*', base=self.database, ext='*')
 
     @property
     def save_filepath(self):
@@ -171,11 +171,11 @@ class Config(object):
         if not os.path.exists(path):
             os.makedirs(path)
             # OSError
-        return path.format(mysql_base=self.database)
+        return path.format(base=self.database)
 
     @property
-    def max_copies_count(self):
-        return int(self._config.get('backup', 'max_copies_count', fallback=1))
+    def max_copies(self):
+        return int(self._config.get('backup', 'max_copies', fallback=1))
 
     @property
     def is_gzip(self):
@@ -193,35 +193,75 @@ class Config(object):
     def encrypt_pass(self):
         return self._config.get('backup', 'encrypt_pass', fallback=self._args.encrypt_pass)
 
-    # WebDAV
+    # storage
     @property
-    def use_webdav(self):
-        return True if self._args.webdav else False
+    def use_storage(self):
+        return True if self._args.storage else False
 
     @property
-    def webdav_host(self):
-        if self.use_webdav:
-            return self._config.get('webdav=' + self._args.webdav, 'webdav_host', fallback='')
+    def storage_transport(self):
+        if self.use_storage:
+            return self._config.get('storage=' + self._args.storage, 'transport', fallback='webdav')
 
     @property
-    def webdav_user(self):
-        if self.use_webdav:
-            return self._config.get('webdav=' + self._args.webdav, 'webdav_user', fallback='')
+    def storage_host(self):
+        if self.use_storage:
+            return self._config.get('storage=' + self._args.storage, 'host', fallback='')
 
     @property
-    def webdav_pass(self):
-        if self.use_webdav:
-            return self._config.get('webdav=' + self._args.webdav, 'webdav_pass', fallback='')
+    def storage_user(self):
+        if self.use_storage:
+            return self._config.get('storage=' + self._args.storage, 'user', fallback='')
 
     @property
-    def webdav_dir(self):
-        if self.use_webdav:
-            return self._config.get('webdav=' + self._args.webdav, 'webdav_dir', fallback='/')
+    def storage_pass(self):
+        if self.use_storage:
+            return self._config.get('storage=' + self._args.storage, 'pass', fallback='')
 
     @property
-    def webdav_max_copies_count(self):
-        if self.use_webdav:
-            return int(self._config.get('webdav=' + self._args.webdav, 'max_copies_count', fallback=1))
+    def storage_proxy_host(self):
+        if self.use_storage:
+            return self._config.get('storage=' + self._args.storage, 'proxy_host', fallback=None)
+
+    @property
+    def storage_proxy_user(self):
+        if self.use_storage:
+            return self._config.get('storage=' + self._args.storage, 'proxy_user', fallback=None)
+
+    @property
+    def storage_proxy_pass(self):
+        if self.use_storage:
+            return self._config.get('storage=' + self._args.storage, 'proxy_pass', fallback=None)
+
+    @property
+    def storage_cert_path(self):
+        if self.use_storage:
+            return self._config.get('storage=' + self._args.storage, 'cert_path', fallback=None)
+
+    @property
+    def storage_key_path(self):
+        if self.use_storage:
+            return self._config.get('storage=' + self._args.storage, 'key_path', fallback=None)
+
+    @property
+    def storage_token(self):
+        if self.use_storage:
+            return self._config.get('storage=' + self._args.storage, 'token', fallback=None)
+
+    @property
+    def storage_port(self):
+        if self.use_storage:
+            return self._config.get('storage=' + self._args.storage, 'port', fallback=None)
+
+    @property
+    def storage_dir(self):
+        if self.use_storage:
+            return self._config.get('storage=' + self._args.storage, 'dir', fallback='/')
+
+    @property
+    def storage_max_copies(self):
+        if self.use_storage:
+            return int(self._config.get('storage=' + self._args.storage, 'max_copies', fallback=1))
 
     # Send email
     @property
@@ -236,68 +276,68 @@ class Config(object):
     @property
     def email_from(self):
         if self.use_sendmail:
-            return self._config.get('sendmail=' + self._args.sendmail, 'send_from', fallback=None)
+            return self._config.get('sendmail=' + self._args.sendmail, 'from', fallback=None)
 
     @property
     def email_to(self):
         if self.use_sendmail:
-            return self._config.get('sendmail=' + self._args.sendmail, 'send_to', fallback=None)
+            return self._config.get('sendmail=' + self._args.sendmail, 'to', fallback=None)
 
     @property
     def email_cc(self):
         if self.use_sendmail:
-            return self._config.get('sendmail=' + self._args.sendmail, 'send_cc', fallback=None)
+            return self._config.get('sendmail=' + self._args.sendmail, 'cc', fallback=None)
 
     @property
     def email_bcc(self):
         if self.use_sendmail:
-            return self._config.get('sendmail=' + self._args.sendmail, 'send_bcc', fallback=None)
+            return self._config.get('sendmail=' + self._args.sendmail, 'bcc', fallback=None)
 
     @property
     def email_subject(self):
         if self.use_sendmail:
-            return self._config.get('sendmail=' + self._args.sendmail, 'send_subject', fallback='')
+            return self._config.get('sendmail=' + self._args.sendmail, 'subject', fallback='')
 
     # SMTP settings
     @property
-    def smtp_api_domain(self):
+    def sendmail_api_domain(self):
         if self.use_sendmail:
-            return self._config.get('sendmail', 'api_domen', fallback=None)
+            return self._config.get('sendmail', 'domen', fallback=None)
 
     @property
-    def smtp_api_token(self):
+    def sendmail_api_token(self):
         if self.use_sendmail:
-            return self._config.get('sendmail', 'api_token', fallback=None)
+            return self._config.get('sendmail', 'token', fallback=None)
 
     @property
-    def smtp_host(self):
+    def sendmail_host(self):
         if self.use_sendmail:
-            return self._config.get('sendmail', 'smtp_host', fallback=None)
+            return self._config.get('sendmail', 'host', fallback=None)
 
     @property
-    def smtp_port(self):
+    def sendmail_port(self):
         if self.use_sendmail:
-            return int(self._config.get('sendmail', 'smtp_port', fallback=0))
+            return int(self._config.get('sendmail', 'port', fallback=0))
 
     @property
-    def smtp_ssl(self):
+    def sendmail_ssl(self):
         if self.use_sendmail:
-            return bool(self._config.get('sendmail', 'smtp_ssl', fallback='False') == 'True')
+            return bool(self._config.get('sendmail', 'ssl', fallback='False') == 'True')
 
     @property
-    def smtp_tls(self):
+    def sendmail_tls(self):
         if self.use_sendmail:
-            return bool(self._config.get('sendmail', 'smtp_tls', fallback='False') == 'True')
+            return bool(self._config.get('sendmail', 'tls', fallback='False') == 'True')
 
     @property
-    def smtp_user(self):
+    def sendmail_user(self):
         if self.use_sendmail:
-            return self._config.get('sendmail', 'smtp_user', fallback='')
+            return self._config.get('sendmail', 'user', fallback='')
 
     @property
-    def smtp_pass(self):
+    def sendmail_pass(self):
         if self.use_sendmail:
-            return self._config.get('sendmail', 'smtp_pass', fallback='')
+            return self._config.get('sendmail', 'pass', fallback='')
 
     # sendmail setting
     @property

@@ -1,6 +1,9 @@
 # !/usr/bin/env python
 import os
-from lib import config, mysql, storage, sendmail
+from lib.config import Config
+from lib.mysql import Mysqldump
+from lib.storage import Storage
+from lib.sendmail import Sendmail
 
 CONFIG_FILE = os.path.abspath(os.path.dirname(__file__)) + '/mysqldump.cfg'
 
@@ -8,24 +11,25 @@ CONFIG_FILE = os.path.abspath(os.path.dirname(__file__)) + '/mysqldump.cfg'
 # entry
 def main():
     # build config
-    cfg = config.Config(CONFIG_FILE)
+    cfg = Config(CONFIG_FILE)
+    logger = cfg.logger
 
     try:
         # exec mysqldump
-        filepath = mysql.Mysqldump(cfg).run()
+        filepath = Mysqldump(cfg).run()
 
         # exec webdav (parallel)
-        if cfg.use_webdav:
-            storage.Storage(cfg, filepath).run()
+        if cfg.use_storage:
+            Storage(cfg, filepath).run()
 
         # exec sendmail (parallel)
         if cfg.use_sendmail:
-            sendmail.Sendmail(cfg, filepath).run()
+            Sendmail(cfg, filepath).run()
 
     except SystemExit:
-        cfg.logger.critical('error found, process terminated')
+        logger.critical('error found, process terminated')
     except Exception as e:
-        cfg.logger.error(e.message)
+        logger.error(e)
 
 
 if __name__ == '__main__':

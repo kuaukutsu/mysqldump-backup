@@ -1,12 +1,12 @@
 [backup]
 ; Path output
 save_dir = ./backup/
-save_tpl = {pref}-{mysql_base}.{ext}
+save_tpl = {pref}-{base}.{ext}
 save_pref = %Y%m%d
 save_gzip = True
 
 ; How to store
-max_copies_count=5
+max_copies = 5
 
 ; Encryption
 ;encrypt_pass = 123456
@@ -14,32 +14,26 @@ compress_level = 6
 
 [mysql=NAMESPACE]
 ; DSN
-;mysql_host = localhost
-;mysql_user = test
-;mysql_pass = password
-mysql_base = test
+;host = localhost
+;user = test
+;pass = password
+base = test
 
 ; Options:
-mysql_options = --login-path=localhost -Q -e --no-autocommit --opt
-
-[storage=yandex]
-; in future versions
-
-[webdav=yandex]
-; in future versions
+options = --login-path=localhost -Q -e --no-autocommit --opt
 
 [sendmail]
 ; API
-api_domen = localhost
-api_token = key-token
+domen = localhost
+token = key-token
 
 ; SMTP
-smtp_host = localhost
-smtp_port = 465
-smtp_ssl  = False
-smtp_tls  = True
-smtp_user = user
-smtp_pass = password
+host = localhost
+port = 465
+ssl  = False
+tls  = True
+user = user
+pass = password
 
 ; Settings
 limit_size_source = 50M
@@ -49,16 +43,45 @@ chunk_max_size = 5M
 ; SMTP or API
 transport = api
 ; header
-send_subject = Backup: {filename}
-send_from = Backup <backup@localhost>
-send_to = user@host
-send_cc = user2@host
-send_bcc = user3@host
+subject = Backup: {filename}
+from    = Backup <backup@localhost>
+to      = user@host
+cc      = user2@host
+bcc     = user3@host
 
 [sendmail=NAMESPACE2]
 ; SMTP or API
 transport = smtp
 ; header
-send_subject = Backup: {filename}
-send_from = Backup <backup@localhost>
-send_to = user@host
+subject = Backup: {filename}
+from    = Backup <backup@localhost>
+to      = user@host
+
+[storage=NAMESPACE2]
+; WebDAV, REST, FTP, SFTP, rsync
+transport = webdav
+
+; WebDav settings
+host = https://webdav.yandex.ru
+user = user
+pass = 123456
+;proxy_host
+;proxy_user
+;proxy_pass
+;cert_path
+;key_path
+
+; REST settings
+host = https://webdav.yandex.ru
+user = user
+token = 123456
+
+; FTP/SFTP settings
+host = https://webdav.yandex.ru
+user = user
+pass = 123456
+port = 2223
+
+; common settings
+dir = /mysqldump/ideapush
+max_copies = 2

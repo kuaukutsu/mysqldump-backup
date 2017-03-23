@@ -14,6 +14,20 @@ Install 7zip (for add files to archive before attach to mail)
 . install p7zip p7zip-plugins
 ```
 
+Install webdavclient
+https://github.com/designerror/webdav-client-python
+```
+# yum install libcurl-devel
+# pip uninstall pycurl
+# export PYCURL_SSL_LIBRARY=nss
+# pip install pycurl
+```
+
+```
+$ sudo apt-get install libxml2-dev libxslt-dev python-dev
+$ sudo apt-get install libcurl4-openssl-dev python-pycurl 
+$ sudo easy_install webdavclient
+```
 
 ## Settings
 
