@@ -18,7 +18,7 @@ class Mysqldump(object):
         # save filepath
         self.dump()
         # encrypt
-        if not self.__use_encrypt():
+        if self.__use_encrypt():
             self._logger.info('use encrypt')
             encrypt(self.__filepath(),
                     self.__filepath_encrypt(),
