@@ -39,6 +39,7 @@ class WebDAV(object):
         client = wc.Client(options)
         if not client.check(self._config.storage_dir):
             self._logger.info('path {0} not exists'.format(self._config.storage_dir))
+            client.mkdir(self._config.storage_dir)
 
         # remove old copies
         files = client.list(self._config.storage_dir)

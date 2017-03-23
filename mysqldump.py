@@ -18,13 +18,13 @@ def main():
         # exec mysqldump
         filepath = Mysqldump(cfg).run()
 
-        # exec webdav (parallel)
-        if cfg.use_storage:
-            Storage(cfg, filepath).run()
-
         # exec sendmail (parallel)
         if cfg.use_sendmail:
             Sendmail(cfg, filepath).run()
+
+        # exec webdav (parallel)
+        if cfg.use_storage:
+            Storage(cfg, filepath).run()
 
     except SystemExit:
         logger.critical('error found, process terminated')

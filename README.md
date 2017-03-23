@@ -44,7 +44,10 @@ cp ./mysqldump.cfg.example ./mysqldump.cfg
 ## Run
 
 ```bash
-/usr/local/bin/python /mysqldump.py -d BASENAME --sendmail=NAMESPACE --encrypt-pass=YOUPASS
+/usr/local/bin/python /mysqldump.py -d BASENAME 
+    --sendmail=NAMESPACE 
+    --storage=NAMESPACE
+    --encrypt-pass=YOUPASS
 ```
 
 Help
