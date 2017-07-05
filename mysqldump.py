@@ -1,5 +1,6 @@
 # !/usr/bin/env python
 import os
+import sys
 from lib.config import Config
 from lib.mysql import Mysqldump
 from lib.storage import Storage
@@ -30,6 +31,8 @@ def main():
         logger.critical('error found, process terminated')
     except Exception as e:
         logger.error(e)
+    finally:
+        sys.exit()
 
 
 if __name__ == '__main__':
