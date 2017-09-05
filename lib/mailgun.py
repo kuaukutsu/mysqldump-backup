@@ -1,6 +1,6 @@
 import os
 import requests
-from config import Config
+from app import App
 
 MSG_BODY = "mysqldump backup"
 
@@ -10,12 +10,12 @@ class Mailgun(object):
         https://documentation.mailgun.com/user_manual.html#sending-via-api
         https://documentation.mailgun.com/user_manual.html#sending-via-smtp
     """
-    def __init__(self, config):
-        if not isinstance(config, Config):
+    def __init__(self, app):
+        if not isinstance(app, App):
             raise Exception('InvalidConfigException')
 
-        self._config = config
-        self._logger = config.logger
+        self._config = app.config
+        self._logger = app.logger
 
     def send(self, filepath):
         data = {

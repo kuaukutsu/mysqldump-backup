@@ -25,7 +25,7 @@ def program_popen(command):
     stdout_value, stderr_value = proc.communicate('through stdin to stdout')
     if len(stderr_value) > 0:
         raise Exception(stderr_value)
-    return proc.wait()
+    return stdout_value
 
 
 def encrypt(src, dst, passwd, compress_level=6):

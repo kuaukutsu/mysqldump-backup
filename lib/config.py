@@ -2,24 +2,16 @@
 # -*- coding: utf-8 -*-
 import os
 import time
-import logging
 import argparse
-from utils import Singleton
 from configparser import RawConfigParser as ConfigParser
-
-logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s', datefmt='%Y/%m/%d %H:%M:%S')
 
 
 class Config(object):
-    __metaclass__ = Singleton
-
-    def __init__(self, config):
-        self._config_file = config
-        self._logger = logging.getLogger(__name__)
-        self._args = self.__parse_args()
+    def __init__(self, configure_file):
+        self._args = self.__parse_args(configure_file)
         self._config = self.__parse_config()
 
-    def __parse_args(self):
+    def __parse_args(self, configure_file):
         parser = argparse.ArgumentParser(description="Usage: %prog [options] ")
         parser.add_argument("-c", "--config-file",
                             dest="config",
@@ -72,61 +64,34 @@ class Config(object):
                             dest="options",
                             type=str,
                             help="options for mysqldump")
-        parser.add_argument("--log-level",
-                            dest="loglevel",
-                            type=str,
-                            help="default ERROR & CRITICAL, set --log-level=info,debug")
 
         args = parser.parse_args()
+
+        # path file configure
+        self._config_file = os.path.abspath(args.config) if args.config else configure_file
+
         if args.logfile:
             # create
             dirlog = os.path.dirname(args.logfile)
             if not os.path.exists(dirlog):
                 os.makedirs(dirlog)
 
-            # level
-            handler = logging.FileHandler(args.logfile)
-            if args.loglevel:
-                if 'info' in args.loglevel.lower():
-                    self._logger.setLevel(logging.INFO)
-                    handler.setLevel(logging.INFO)
-                if 'debug' in args.loglevel.lower():
-                    self._logger.setLevel(logging.DEBUG)
-                    handler.setLevel(logging.DEBUG)
-
-            # format
-            formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s', '%Y/%m/%d %H:%M:%S')
-            handler.setFormatter(formatter)
-            self._logger.addHandler(handler)
-
-        if args.loglevel:
-            if 'info' in args.loglevel.lower():
-                self._logger.setLevel(logging.INFO)
-            if 'debug' in args.loglevel.lower():
-                self._logger.setLevel(logging.DEBUG)
-
         if args.encrypt_pass:
-            self._logger.info('encrypt_pass is True')
             args.gzip = False
             args.encrypt = True
-
-        if args.config:
-            self._logger.info('use configuration {0}'.format(self._config_file))
-            self._config_file = os.path.abspath(args.config)
 
         return args
 
     def __parse_config(self):
         parser = ConfigParser()
         if not os.path.exists(self._config_file):
-            self._logger.error('Config file not found at: {0}, exit'.format(os.path.abspath(self._config_file)))
-            raise IOError('Config file not found at: {0}, exit'.format(os.path.abspath(self._config_file)))
+            raise IOError('Configuration file not found at: {0}, exit'.format(os.path.abspath(self._config_file)))
         parser.read(self._config_file)
         return parser
 
     @property
-    def logger(self):
-        return self._logger
+    def logfile(self):
+        return self._args.logfile
 
     @property
     def db_host(self):

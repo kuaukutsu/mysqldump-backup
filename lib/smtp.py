@@ -1,5 +1,5 @@
 import os
-from config import Config
+from app import App
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -11,12 +11,11 @@ class Smtp(object):
     """
         https://docs.python.org/2/library/email-examples.html
     """
-    def __init__(self, config):
-        if not isinstance(config, Config):
+    def __init__(self, app):
+        if not isinstance(app, App):
             raise Exception('InvalidConfigException')
 
-        self._config = config
-        self._logger = config.logger
+        self._config = app.config
 
     def send(self, filepath):
         msg = MIMEMultipart()
