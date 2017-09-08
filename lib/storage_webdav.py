@@ -50,5 +50,5 @@ class WebDAV(object):
                 client.clean(path.join(self._config.storage_dir, f))
 
         # upload
-        client.upload_sync(remote_path=path.join(self._config.storage_dir, path.basename(filepath)),
+        client.upload_file(remote_path=path.join(self._config.storage_dir, path.basename(filepath)),
                            local_path=filepath)
