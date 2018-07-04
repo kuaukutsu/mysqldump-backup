@@ -12,12 +12,15 @@ class App(object):
     __metaclass__ = Singleton
 
     def __init__(self):
-        # init logger
-        logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s', datefmt='%Y/%m/%d %H:%M:%S')
-        self._logger = logging.getLogger(__name__)
 
         # parse configurations
         self._config = Config(CONFIG_FILE)
+
+        # init logger
+        logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s',
+                            datefmt='%Y/%m/%d %H:%M:%S',
+                            level=logging.DEBUG if self._config.is_debug else logging.WARNING)
+        self._logger = logging.getLogger(__name__)
 
         # handler log
         if self._config.logfile:

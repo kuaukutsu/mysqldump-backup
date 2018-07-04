@@ -21,7 +21,7 @@ class WebDAV(object):
             'webdav_hostname': self._config.storage_host,
             'webdav_login': self._config.storage_user,
             'webdav_password': self._config.storage_pass,
-            'verbose': False
+            'verbose': True if self._config.is_debug else False
         }
 
         # ext option
@@ -37,6 +37,7 @@ class WebDAV(object):
             options['key_path'] = self._config.storage_key_path
 
         client = wc.Client(options)
+        # need check authorized
         if not client.check(self._config.storage_dir):
             self._logger.info('path {0} not exists'.format(self._config.storage_dir))
             client.mkdir(self._config.storage_dir)

@@ -55,7 +55,7 @@ class Mysqldump(object):
                 os.remove(os.path.join(work_dir, f))
 
     def __create_cmd(self):
-        return 'mysqldump{host}{user}{password}{options}{database}{gzip} > {filepath}'.format(
+        return 'mysqldump{host}{port}{user}{password}{options}{database}{gzip} > {filepath}'.format(
             host=' -h ' + self._config.db_host if self._config.db_host else '',
             port=' -P ' + self._config.db_port if self._config.db_port else '',
             user=' -u ' + self._config.db_user if self._config.db_user else '',

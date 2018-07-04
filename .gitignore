@@ -5,3 +5,4 @@ mysqldump.cfg
 /backup/
 # vendor
 /vendor/
+/venv/

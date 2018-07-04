@@ -64,6 +64,11 @@ class Config(object):
                             dest="options",
                             type=str,
                             help="options for mysqldump")
+        parser.add_argument("--debug",
+                            dest="debug",
+                            default=False,
+                            action='store_true',
+                            help="debug")
 
         args = parser.parse_args()
 
@@ -92,6 +97,10 @@ class Config(object):
     @property
     def logfile(self):
         return self._args.logfile
+
+    @property
+    def is_debug(self):
+        return bool(self._args.debug)
 
     @property
     def db_host(self):
