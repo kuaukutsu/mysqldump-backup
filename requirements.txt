@@ -1,5 +1,5 @@
 argparse==1.4.0
 configparser==3.5.0
-requests==2.11.1
-pyminizip==0.2.1
+requests>=2.20.0
+pyminizip>=0.2.2
 webdavclient==1.0.8
