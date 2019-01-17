@@ -1,6 +1,5 @@
 from os import path
 from app import App
-import webdav.client as wc
 
 
 class WebDAV(object):
@@ -36,20 +35,20 @@ class WebDAV(object):
         if self._config.storage_key_path:
             options['key_path'] = self._config.storage_key_path
 
-        client = wc.Client(options)
-        # need check authorized
-        if not client.check(self._config.storage_dir):
-            self._logger.info('path {0} not exists'.format(self._config.storage_dir))
-            client.mkdir(self._config.storage_dir)
-
-        # remove old copies
-        files = client.list(self._config.storage_dir)
-        if 0 < self._config.storage_max_copies <= len(files):
-            files.sort(reverse=False)
-            for f in files[0:(len(files) - self._config.storage_max_copies)]:
-                self._logger.debug('remove old copies {0}'.format(f))
-                client.clean(path.join(self._config.storage_dir, f))
-
-        # upload
-        client.upload_file(remote_path=path.join(self._config.storage_dir, path.basename(filepath)),
-                           local_path=filepath)
+        # client = wc.Client(options)
+        # # need check authorized
+        # if not client.check(self._config.storage_dir):
+        #     self._logger.info('path {0} not exists'.format(self._config.storage_dir))
+        #     client.mkdir(self._config.storage_dir)
+        #
+        # # remove old copies
+        # files = client.list(self._config.storage_dir)
+        # if 0 < self._config.storage_max_copies <= len(files):
+        #     files.sort(reverse=False)
+        #     for f in files[0:(len(files) - self._config.storage_max_copies)]:
+        #         self._logger.debug('remove old copies {0}'.format(f))
+        #         client.clean(path.join(self._config.storage_dir, f))
+        #
+        # # upload
+        # client.upload_file(remote_path=path.join(self._config.storage_dir, path.basename(filepath)),
+        #                    local_path=filepath)
